@@ -1,5 +1,6 @@
 package com.quickhire.file.service.impl;
 
+import com.quickhire.file.client.UserServiceClient;
 import com.quickhire.file.dto.FileUploadResponse;
 import com.quickhire.file.exception.FileStorageException;
 import com.quickhire.file.service.FileService;
@@ -15,13 +16,22 @@ import java.util.List;
 public class FileServiceImpl implements FileService {
 
     private final StorageService storageService;
+    private final UserServiceClient userServiceClient;
 
-    public FileServiceImpl(StorageService storageService) {
+    public FileServiceImpl(StorageService storageService, UserServiceClient userServiceClient) {
         this.storageService = storageService;
+        this.userServiceClient = userServiceClient;
     }
 
     @Override
     public FileUploadResponse uploadResume(MultipartFile file, String userId) throws IOException {
+        // Verify user exists
+        try {
+            userServiceClient.getUserById(Long.parseLong(userId));
+        } catch (Exception e) {
+            throw new FileStorageException("User not found with id: " + userId);
+        }
+
         validateFile(file, List.of(
                 "application/pdf",
                 "application/msword",
@@ -38,6 +48,13 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public FileUploadResponse uploadLogo(MultipartFile file, String companyId) throws IOException {
+        // verify user exists
+        try {
+            userServiceClient.getUserById(Long.parseLong(companyId));
+        } catch (Exception e) {
+            throw new FileStorageException("User not found with id: " + companyId);
+        }
+
         validateFile(file, List.of("image/jpeg", "image/png", "image/webp"));
         String url = storageService.uploadFile(file, "logos/" + companyId);
         return FileUploadResponse.builder()
