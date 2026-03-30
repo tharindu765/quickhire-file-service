@@ -11,7 +11,7 @@
 	<groupId>com.quickhire</groupId>
 	<artifactId>file-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
+	<name>file-service</name>
 	<description/>
 	<url/>
 	<licenses>
@@ -58,11 +58,6 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webmvc-test</artifactId>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>
